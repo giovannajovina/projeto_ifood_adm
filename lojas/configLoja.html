@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevFood</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            background-color: #f5f5f5;
+        }
+
+        .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    background-color: #fff;
+    padding: 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; /* Caso tenha muitas opções no menu */
+}
+
+
+        .sidebar h2 {
+            color: #ff0000;
+        }
+
+        .sidebar .store-status {
+            background: red;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar ul li.active {
+            font-weight: bold;
+            color: red;
+        }
+
+        .new-badge {
+            background: red;
+            color: white;
+            padding: 3px 6px;
+            font-size: 10px;
+            border-radius: 5px;
+            margin-left: auto;
+        }
+
+        .notification {
+            background: red;
+            color: white;
+            font-size: 12px;
+            padding: 2px 5px;
+            border-radius: 50%;
+        }
+        .main-content {
+    margin-left: 250px; /* Igual ao width da sidebar */
+    flex: 1;
+    padding: 20px;
+}
+
+
+        header {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .tabs div {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .tabs .active {
+            border-bottom: 2px solid red;
+            color: red;
+        }
+
+        .replication-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .replication-header a {
+            color: green;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .button {
+            background: red;
+            color: white;
+            padding: 10px;
+
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+
+        }
+
+        .list_lojas {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #fafafa;
+        }
+
+        .status {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-icon {
+            color: green;
+            font-size: 16px;
+            margin-left: 5px;
+        }
+
+        .label {
+            background: red;
+            color: white;
+            padding: 3px 6px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        a {
+        text-decoration: none;
+        color: black;
+        }
+
+        .form-container {
+           
+            padding: 20px;
+            border-radius: 10px;
+           
+            max-width: 100%;
+            margin: auto;
+        }
+
+        .form-container h2 {
+            color: red;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-container form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .form-container label {
+            width: 100%;
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .form-container input {
+            width: calc(48% - 10px);
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .form-container input.full-width {
+            width: 100%;
+        }
+
+        .button-group {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .submit-button, .cancel-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .submit-button {
+            background-color: green;
+        }
+
+        .cancel-button {
+            background-color: gray;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="sidebar-container"></div>
+    <div class="main-content">
+        <header>
+            <h1>Editar Loja</h1>
+            <p>Atualize as informações da sua loja aqui</p>
+        </header>
+        <div class="tabs">
+            <div class="active">Configuração</div>
+            <div><a href="configProdutos.html"> Produtos</a></div>
+        </div>
+        <div class="form-container">
+            <form>
+                <label for="imagem">Link da Imagem da Loja:</label>
+                <input type="text" id="imagem" class="full-width" placeholder="Insira o link da imagem da loja">
+
+                <label for="nome-loja">Nome da Loja:</label>
+                <input type="text" id="nome-loja" class="full-width" placeholder="Nome da loja">
+
+                <label for="telefone">Telefone:</label>
+                <input type="text" id="telefone" class="full-width" placeholder="Telefone para contato">
+
+                <label for="endereco">Endereço:</label>
+                <input type="text" id="endereco" class="full-width" placeholder="Endereço da loja">
+
+                <label for="horario">Horário de Funcionamento:</label>
+                <input type="text" id="horario" class="full-width" placeholder="Ex: 9h às 18h">
+
+                <label for="descricao">Descrição:</label>
+                <input type="text" id="descricao" class="full-width" placeholder="Descrição breve da loja">
+
+                <div class="button-group">
+                    <button type="submit" class="submit-button">Salvar Alterações</button>
+                    <button type="button" class="cancel-button">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="sidebar.js"></script>
+    
+    
+</body>
+</html>
