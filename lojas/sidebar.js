@@ -4,12 +4,12 @@ document.addEventListener("DOMContentLoaded", function () {
             <h2>DevFood</h2>
             <div class="store-status">Loja fechada<br>Gestor de Pedidos fechado</div>
             <ul>
-                <li><a href="categorias.html">Categorias</a></li>
-                <li><a href="banners.html">Banners</a></li>
-                <li><a href="pedidos.html">Pedidos <span class="notification">1</span></a></li>
+                <li><a href="#">Categorias</a></li>
+                <li><a href="#">Banners</a></li>
+                <li><a href="#">Pedidos <span class="notification">1</span></a></li>
                 <li class="active"><a href="index.html">Lojas</a></li>
-                <li><a href="configProdutos.html">Produtos</a></li>
-                <li><a href="usuarios.html">Usuarios <span class="new-badge">NOVO</span></a></li>
+                <li><a href="configProdutosAba.html">Produtos</a></li>
+                <li><a href="#">Usuarios <span class="new-badge">NOVO</span></a></li>
             </ul>
         </div>
     `;
