@@ -1,0 +1,115 @@
+<link rel="stylesheet" href="src/pages/products/style.css">
+
+<header>
+    <h1>Produtos</h1>
+    <p>Cadastre produtos a sua loja aqui</p>
+</header>
+<div class="store-selection">
+    <label for="store-select">Escolha uma loja:</label>
+    <select id="store-select">
+        <option value="">Selecione uma loja</option>
+        <option value="loja1">Loja 1</option>
+        <option value="loja2">Loja 2</option>
+        <option value="loja3">Loja 3</option>
+        <option value="loja4">Loja 4</option>
+    </select>
+</div>
+
+<div id="product-section" class="hidden">
+
+    <div class="tabs">
+        <div class="active">Produtos</div>
+    </div>
+
+    <div class="search-bar">
+        <button class="button-open-modal" onclick="openModal()">Cadastrar Produto</button>
+        <input type="text" placeholder="Buscar por um produto">
+    </div>
+    
+    <table class="list_produtos">
+        <tr>
+            <th>Imagem</th>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>Valor</th>
+            <th>Estoque</th>
+            <th> </th>
+            <th> </th>
+        </tr>
+        <td><img src="${produto.imagem}" alt="imagem" width="70"></td>
+        <td>${produto.nome}</td>
+        <td>${produto.loja_id}</td>
+        <td>${produto.valor_unitario}</td>
+        <td>${produto.estoque}</td>
+        <td> <button class="button-open-modal-verde" onclick="openModalEdit()">Editar</button></td>
+        <td> <button class="button-open-modal"> Excluir</button> </td>
+    </table>
+</div>
+
+<!-- MODALS -->
+
+<div id="modalEdit" class="modalEdit">
+    <div class="modalEdit-content">
+        <h2>Editar Produto Existente</h2>
+        <form>
+            <label class="labelEdit" for="imagem">Imagem:</label>
+            <input type="text" id="imagemUrl" name="imagemUrl" placeholder="Imagem do produto" required>
+
+            <label class="labelEdit" for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" placeholder="Nome do produto" required>
+            <label class="labelEdit" for="categoria">Categoria:</label>
+            <select id="category-select-edit">
+                <option value="">Selecione uma loja</option>
+                <option value="loja1">Loja 1</option>
+                <option value="loja2">Loja 2</option>
+                <option value="loja3">Loja 3</option>
+                <option value="loja4">Loja 4</option>
+            </select>
+
+            <label class="labelEdit" for="valor">Valor:</label>
+            <input type="number" id="valor" name="valor" placeholder="Valor" step="0.01" required>
+
+            <label class="labelEdit" for="estoque">Estoque:</label>
+            <input type="number" id="estoque" name="estoque" placeholder="Quantidade em estoque" required>
+
+            <div class="modal-buttons">
+                <button type="submit" class="submit-button">Enviar</button>
+                <button type="button" class="cancel-button" onclick="closeModalEdit()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h2>Cadastrar Novo Produto</h2>
+        <form>
+            <label for="imagem">Imagem:</label>
+            <input type="text" id="imagemUrl" name="imagemUrl" placeholder="Imagem do produto" required>
+
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" placeholder="Nome do produto" required>
+            <label for="categoria">Categoria:</label>
+            <select id="category-select">
+                <option value="">Selecione uma loja</option>
+                <option value="loja1">Loja 1</option>
+                <option value="loja2">Loja 2</option>
+                <option value="loja3">Loja 3</option>
+                <option value="loja4">Loja 4</option>
+            </select>
+
+            <label for="valor">Valor:</label>
+            <input type="number" id="valor" name="valor" placeholder="Valor" step="0.01" required>
+
+            <label for="estoque">Estoque:</label>
+            <input type="number" id="estoque" name="estoque" placeholder="Quantidade em estoque" required>
+
+            <div class="modal-buttons">
+                <button type="submit" class="submit-button">Enviar</button>
+                <button type="button" class="cancel-button" onclick="closeModal()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="src/pages/products/list.js"></script>
