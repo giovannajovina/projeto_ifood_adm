@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Site Modular</title>
+
+    <!-- Estilos Globais -->
+    <link rel="stylesheet" href="src/assets/css/global.css">
+    <link rel="stylesheet" href="src/assets/css/sidebar.css">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <section class="main">
+        <!-- Sidebar (Carregado dinamicamente) -->
+        <div id="sidebar-container"></div>
+
+        <!-- Conteúdo Principal -->
+        <div class="content">
+            <main id="app">
+                <p>Carregando...</p>
+            </main>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="src/assets/js/state.js"></script>
+    <script src="src/assets/js/api.js"></script>
+    <script src="src/assets/js/router.js"></script>
+    <script src="src/assets/js/sidebar.js"></script>
+</body>
+</html>

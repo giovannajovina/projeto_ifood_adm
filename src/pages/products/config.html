@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="src/pages/products/style.css">
+
+
+<header>
+    <h1>Produtos</h1>
+    <p>Cadastre produtos a sua loja aqui</p>
+</header>
+<div class="tabs">
+    <div> <a href="configLoja.html"> Configuração</a></div>
+    <div class="active">Produtos</div>
+</div>
+<div class="search-bar">
+    <button class="button-open-modal" onclick="openModal()">Cadastrar Produto</button>
+    <input type="text" placeholder="Buscar por um produto">
+</div>
+
+<table class="list_produtos">
+    <tr>
+        <th>Imagem</th>
+        <th>Nome</th>
+        <th>Categoria</th>
+        <th>Valor</th>
+        <th>Estoque</th>
+    </tr>
+</table>
+<!-- MODALS -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h2>Cadastrar Novo Produto</h2>
+        <form>
+            <label for="imagem">Imagem:</label>
+            <input type="file" id="imagem" name="imagem" accept="image/*">
+
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" placeholder="Nome do produto" required>
+
+            <label for="categoria">Categoria:</label>
+            <input type="text" id="categoria" name="categoria" placeholder="Categoria do produto" required>
+
+            <label for="valor">Valor:</label>
+            <input type="number" id="valor" name="valor" placeholder="Valor" step="0.01" required>
+
+            <label for="estoque">Estoque:</label>
+            <input type="number" id="estoque" name="estoque" placeholder="Quantidade em estoque" required>
+
+            <div class="modal-buttons">
+                <button type="submit" class="submit-button">Enviar</button>
+                <button type="button" class="cancel-button" onclick="closeModal()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="src/pages/products/config.js"></script>

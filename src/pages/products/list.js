@@ -1,0 +1,72 @@
+document.getElementById("store-select").addEventListener("change", function () {
+    let productSection = document.getElementById("product-section");
+    if (this.value) {
+        productSection.classList.remove("hidden");
+    } else {
+        productSection.classList.add("hidden");
+    }
+});
+
+function openModalEdit() {
+    document.getElementById("modalEdit").style.display = "flex";
+}
+
+function closeModalEdit() {
+    document.getElementById("modalEdit").style.display = "none";
+}
+window.onclick = function (event) {
+    let modal_edit = document.getElementById("modalEdit");
+    if (event.target === modaedit) {
+        closeModalEdit();
+    }
+}
+
+function openModal() {
+    document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
+}
+
+window.onclick = function (event) {
+    let modal = document.getElementById("modal");
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const response = fetch(`${config.API_URL}/api/admin/produtos/list`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${'9|PTcTWPkxwL3Wdg1v3wnBKQiJxg0N9LoiLHLSZywe'}`,
+            "Content-Type": "application/json"
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(produto => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+            <td><img src="${produto.imagem}" alt="imagem" width="70"></td>
+            <td>${produto.nome}</td>
+            <td>${produto.loja_id}</td>
+            <td>${produto.valor_unitario}</td>
+            <td>${produto.estoque}</td>
+            <td> <button class="button-open-modal"> </button> Excluir</td>
+            <td> <button class="button-open-modal-verde"> </button> Editar</td>
+        `;
+                table.appendChild(row);
+            });
+        })
+        .catch(error => console.error("Erro ao buscar produtos:", error));
+
+    if (!response.ok) {
+        throw new Error(`Erro na API: ${response.text()}`);
+    }
+
+    const table = document.querySelector(".list_produtos");
+
+})
