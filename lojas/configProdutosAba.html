@@ -5,8 +5,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DevFood</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="./config.js"></script>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <!-- Bootstrap Links -->
+    
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+    <!--    &lt;!&ndash; for handle Bar &ndash;&gt;-->
+    <script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
+
+    <!--Semantics Ui CDN  -->
+    <!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">-->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>-->
+
+    <!-- select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -181,6 +211,7 @@
             border-radius: 5px;
             font-size: 12px;
         }
+
         .labelEdit {
             background: red;
             color: white;
@@ -239,6 +270,7 @@
             border-radius: 5px;
             border: 1px solid #ddd;
         }
+
         .modalEdit {
             display: none;
             position: fixed;
@@ -296,6 +328,7 @@
             border: 1px solid #ddd;
 
         }
+
         #category-select-edit {
             width: 106%;
             padding: 10px;
@@ -385,6 +418,20 @@
         .hidden {
             display: none;
         }
+
+        table img {
+            max-width: 70px !important;
+            /* Defina um tamanho máximo */
+            height: auto;
+            /* Mantém a proporção */
+            display: block;
+            margin: auto;
+            border-radius: 5px;
+        }
+
+        .select2-container {
+            display: inline !important;
+        }
     </style>
 </head>
 
@@ -399,10 +446,7 @@
             <label for="store-select">Escolha uma loja:</label>
             <select id="store-select">
                 <option value="">Selecione uma loja</option>
-                <option value="loja1">Loja 1</option>
-                <option value="loja2">Loja 2</option>
-                <option value="loja3">Loja 3</option>
-                <option value="loja4">Loja 4</option>
+
             </select>
         </div>
         <div id="product-section" class="hidden">
@@ -414,7 +458,7 @@
                 <button class="button-open-modal" onclick="openModal()">Cadastrar Produto</button>
                 <input type="text" placeholder="Buscar por um produto">
             </div>
-            <div id="modal" class="modal">
+            <div id="modalProdutoNovo" class="modal">
                 <div class="modal-content">
                     <h2>Cadastrar Novo Produto</h2>
                     <form>
@@ -424,13 +468,7 @@
                         <label for="nome">Nome:</label>
                         <input type="text" id="nome" name="nome" placeholder="Nome do produto" required>
                         <label for="categoria">Categoria:</label>
-                        <select id="category-select">
-                            <option value="">Selecione uma loja</option>
-                            <option value="loja1">Loja 1</option>
-                            <option value="loja2">Loja 2</option>
-                            <option value="loja3">Loja 3</option>
-                            <option value="loja4">Loja 4</option>
-                        </select>
+                        <!-- <select id="modalCategoria" class="form-control select2" multiple></select> -->
 
                         <label for="valor">Valor:</label>
                         <input type="number" id="valor" name="valor" placeholder="Valor" step="0.01" required>
@@ -440,147 +478,469 @@
 
                         <div class="modal-buttons">
                             <button type="submit" class="submit-button">Enviar</button>
-                            <button type="button" class="cancel-button" onclick="closeModal()">Cancelar</button>
+                            <button type="button" class="cancel-button">Cancelar</button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <table class="list_produtos">
+            <table class="table table-bordered table-striped">
                 <tr>
                     <th>Imagem</th>
                     <th>Nome</th>
                     <th>Categoria</th>
                     <th>Valor</th>
                     <th>Estoque</th>
-                    <th> </th>
-                    <th> </th>
+                    <th>Ações</th>
                 </tr>
-                <td><img src="${produto.imagem}" alt="imagem" width="70"></td>
-                <td>${produto.nome}</td>
-                <td>${produto.loja_id}</td>
-                <td>${produto.valor_unitario}</td>
-                <td>${produto.estoque}</td>
-                <td> <button class="button-open-modal-verde" onclick="openModalEdit()">Editar</button></td>
-                <td> <button class="button-open-modal"> Excluir</button> </td>
-        </div>
-        <div id="modalEdit" class="modalEdit">
-            <div class="modalEdit-content">
-                <h2>Editar Produto Existente</h2>
-                <form>
-                    <label class="labelEdit" for="imagem">Imagem:</label>
-                    <input type="text" id="imagemUrl" name="imagemUrl" placeholder="Imagem do produto" required>
+                <tbody id="tabelaProdutos">
+                    <tr>
+                        <td colspan="6" class="text-center">Selecione uma loja para ver os produtos.</td>
+                    </tr>
+                </tbody>
+            </table>
 
-                    <label class="labelEdit" for="nome">Nome:</label>
-                    <input type="text" id="nome" name="nome" placeholder="Nome do produto" required>
-                    <label class="labelEdit" for="categoria">Categoria:</label>
-                    <select id="category-select-edit">
-                        <option value="">Selecione uma loja</option>
-                        <option value="loja1">Loja 1</option>
-                        <option value="loja2">Loja 2</option>
-                        <option value="loja3">Loja 3</option>
-                        <option value="loja4">Loja 4</option>
-                    </select>
+            <div class="modal fade" id="modalEditarProduto" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Toast de Sucesso -->
+                        <div id="toastSuccess"
+                            class="toast align-items-center text-bg-success border-0 position-fixed bottom-0 end-0 p-3"
+                            role="alert" aria-live="polite" aria-atomic="true" style="z-index: 1050;">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    Produto editado com sucesso!
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                    data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                        </div>
 
-                    <label class="labelEdit" for="valor">Valor:</label>
-                    <input type="number" id="valor" name="valor" placeholder="Valor" step="0.01" required>
+                        <div class="modal-header">
+                            <h5 class="modal-title">Editar Produto Existente</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="modalProdutoId">
 
-                    <label class="labelEdit" for="estoque">Estoque:</label>
-                    <input type="number" id="estoque" name="estoque" placeholder="Quantidade em estoque" required>
+                            <div class="row">
 
-                    <div class="modal-buttons">
-                        <button type="submit" class="submit-button">Enviar</button>
-                        <button type="button" class="cancel-button" onclick="closeModalEdit()">Cancelar</button>
+                                <div class="col">
+
+                                    <label>Imagem:</label>
+                                    <input type="text" id="modalImagem" class="form-control"
+                                        placeholder="Imagem do produto">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+
+                                    <label>Nome:</label>
+                                    <input type="text" id="modalNome" class="form-control"
+                                        placeholder="Nome do produto">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+
+                                    <label for="modalCategoria">Categoria:</label>
+                                    <select id="modalCategoria" class="form-control js-example-basic-multiple"
+                                        name="categorias[]" multiple="multiple">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+
+                                    <label>Valor:</label>
+                                    <input type="text" id="modalValor" class="form-control" placeholder="Valor">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+
+                                    <label>Estoque:</label>
+                                    <input type="text" id="modalEstoque" class="form-control"
+                                        placeholder="Quantidade em estoque">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+
+                                    <label>Descrição:</label>
+                                    <textarea id="modalDescricao" class="form-control"></textarea>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" onclick="salvarEdicaoProduto()">Enviar</button>
+                            <button type="button"  class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
-        </div>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
 
-                const response = fetch(`${config.API_URL}/api/admin/produtos/list`, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${'9|PTcTWPkxwL3Wdg1v3wnBKQiJxg0N9LoiLHLSZywe'}`,
-                        "Content-Type": "application/json"
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        data.forEach(produto => {
-                            const row = document.createElement("tr");
-                            row.innerHTML = `
-                        <td><img src="${produto.imagem}" alt="imagem" width="70"></td>
-                        <td>${produto.nome}</td>
-                        <td>${produto.loja_id}</td>
-                        <td>${produto.valor_unitario}</td>
-                        <td>${produto.estoque}</td>
-                        <td> <button class="button-open-modal"> </button> Excluir</td>
-                        <td> <button class="button-open-modal-verde"> </button> Editar</td>
-                    `;
-                            table.appendChild(row);
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+
+
+                    const selectLojas = document.getElementById('store-select');
+
+                    // Fazendo a requisição para a API de lojas
+                    fetch("http://127.0.0.1:8000/api/lojas/list")
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Erro ao buscar lojas: ${response.status}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (!Array.isArray(data)) {
+                                throw new Error("Formato de resposta inválido da API");
+                            }
+
+                            data.forEach(loja => {
+                                let option = document.createElement('option');
+                                option.value = loja.id;
+                                option.textContent = loja.nome_fantasia;
+                                selectLojas.appendChild(option);
+                            });
+                        })
+                        .catch(error => {
+                            console.error("Erro ao carregar lojas:", error);
                         });
-                    })
-                    .catch(error => console.error("Erro ao buscar produtos:", error));
 
-                if (!response.ok) {
-                    throw new Error(`Erro na API: ${response.text()}`);
+
+                    // Evento para capturar a loja selecionada e buscar produtos
+                    selectLojas.addEventListener("change", function () {
+                        const lojaId = this.value;
+
+                        if (lojaId) {
+                            buscarProdutos(lojaId);
+                        } else {
+                            tabelaProdutos.innerHTML = "<tr><td colspan='6' class='text-center'>Selecione uma loja para ver os produtos.</td></tr>";
+                        }
+                    });
+
+                    // Função para buscar produtos da loja selecionada
+                    function buscarProdutos(lojaId) {
+                        fetch(`http://127.0.0.1:8000/api/lojas/${lojaId}/produtos`)
+                            .then(response => response.json())
+                            .then(produtos => {
+                                tabelaProdutos.innerHTML = ""; // Limpa a tabela anterior
+                                produtoList = produtos
+
+                                if (produtos.length === 0) {
+                                    tabelaProdutos.innerHTML = "<tr><td colspan='6' class='text-center'>Nenhum produto encontrado para esta loja.</td></tr>";
+                                    return;
+                                }
+
+                                produtos.forEach(produto => {
+                                    let tr = document.createElement('tr');
+
+                                    let imagemTd = document.createElement('td');
+                                    let img = document.createElement('img');
+                                    img.src = produto.imagem ? produto.imagem : '0';
+                                    img.alt = produto.nome;
+                                    img.classList.add("img-thumbnail");
+                                    imagemTd.appendChild(img);
+
+                                    let nomeTd = document.createElement('td');
+                                    nomeTd.textContent = produto.nome;
+
+                                    let categoriaTd = document.createElement('td');
+
+                                    if (produto.categoria && produto.categoria.length > 0) {
+                                        categoriaTd.textContent = produto.categoria.map(cat => cat.name).join(', ');
+                                    } else {
+                                        categoriaTd.textContent = 'Sem Categoria';
+                                    }
+
+                                    let precoTd = document.createElement('td');
+                                    precoTd.textContent = `R$ ${parseFloat(produto.valor_unitario).toFixed(2)}`;
+
+                                    // 🔹 Coluna do Estoque - Agora acessamos `produto.estoque`
+                                    let estoqueTd = document.createElement('td');
+                                    estoqueTd.textContent = (produto.estoque[0] && produto.estoque[0].quantidade !== undefined)
+                                        ? produto.estoque[0].quantidade
+                                        : 'Indefinido';
+                                    // console.log(produto);
+
+                                    let acoesTd = document.createElement('td');
+                                    acoesTd.innerHTML = `
+                                <button class="btn btn-success btn-sm me-2" onclick="openModalEdit(${produto.id})">Editar</button>
+                                <button class="btn btn-danger btn-sm" onclick="excluirProduto(${produto.id})">Excluir</button>
+                            `;
+
+                                    // Adiciona as células à linha
+                                    tr.appendChild(imagemTd);
+                                    tr.appendChild(nomeTd);
+                                    tr.appendChild(categoriaTd);
+                                    tr.appendChild(precoTd);
+                                    tr.appendChild(estoqueTd);
+                                    tr.appendChild(acoesTd);
+
+                                    // Adiciona a linha à tabela
+                                    tabelaProdutos.appendChild(tr);
+                                });
+                            })
+                            .catch(error => {
+                                console.error("Erro ao carregar produtos:", error);
+                                tabelaProdutos.innerHTML = "<tr><td colspan='6' class='text-center'>Erro ao carregar produtos.</td></tr>";
+                            });
+                    }
+
+
+
+
+
+                })
+                // Função para buscar produtos da loja selecionada
+                function buscarProdutoss(lojaId) {
+                    fetch(`http://127.0.0.1:8000/api/lojas/${lojaId}/produtos`)
+                        .then(response => response.json())
+                        .then(produtos => {
+                            tabelaProdutos.innerHTML = ""; // Limpa a tabela anterior
+                            produtoList = produtos
+
+                            if (produtos.length === 0) {
+                                tabelaProdutos.innerHTML = "<tr><td colspan='6' class='text-center'>Nenhum produto encontrado para esta loja.</td></tr>";
+                                return;
+                            }
+
+                            produtos.forEach(produto => {
+                                let tr = document.createElement('tr');
+
+                                let imagemTd = document.createElement('td');
+                                let img = document.createElement('img');
+                                img.src = produto.imagem ? produto.imagem : '';
+                                img.alt = produto.nome;
+                                img.classList.add("img-thumbnail");
+                                imagemTd.appendChild(img);
+
+                                let nomeTd = document.createElement('td');
+                                nomeTd.textContent = produto.nome;
+
+                                let categoriaTd = document.createElement('td');
+
+                                if (produto.categoria && produto.categoria.length > 0) {
+                                    categoriaTd.textContent = produto.categoria.map(cat => cat.name).join(', ');
+                                } else {
+                                    categoriaTd.textContent = 'Sem Categoria';
+                                }
+
+                                let precoTd = document.createElement('td');
+                                precoTd.textContent = `R$ ${parseFloat(produto.valor_unitario).toFixed(2)}`;
+
+                                // 🔹 Coluna do Estoque - Agora acessamos `produto.estoque`
+                                let estoqueTd = document.createElement('td');
+                                estoqueTd.textContent = (produto.estoque[0] && produto.estoque[0].quantidade !== undefined)
+                                    ? produto.estoque[0].quantidade
+                                    : 'Indefinido';
+                                // console.log(produto);
+
+                                let acoesTd = document.createElement('td');
+                                acoesTd.innerHTML = `
+                                <button class="btn btn-success btn-sm me-2" onclick="openModalEdit(${produto.id})">Editar</button>
+                                <button class="btn btn-danger btn-sm" onclick="excluirProduto(${produto.id})">Excluir</button>
+                            `;
+
+                                // Adiciona as células à linha
+                                tr.appendChild(imagemTd);
+                                tr.appendChild(nomeTd);
+                                tr.appendChild(categoriaTd);
+                                tr.appendChild(precoTd);
+                                tr.appendChild(estoqueTd);
+                                tr.appendChild(acoesTd);
+
+                                // Adiciona a linha à tabela
+                                tabelaProdutos.appendChild(tr);
+                            });
+                        })
+                        .catch(error => {
+                            console.error("Erro ao carregar produtos:", error);
+                            tabelaProdutos.innerHTML = "<tr><td colspan='6' class='text-center'>Erro ao carregar produtos.</td></tr>";
+                        });
                 }
 
-                const table = document.querySelector(".list_produtos");
+                $(document).ready(function () {
+                    let categoriaSelect = $("#modalCategoria");
 
-            })
+                    // Inicializa o Select2 com busca interna
+                    categoriaSelect.select2({
+                        placeholder: "Selecione categorias...",
+                        allowClear: true,
+                        closeOnSelect: false
+                    });
 
+                    // 🔹 Busca as categorias do banco de dados e adiciona ao Select2
+                    fetch("http://127.0.0.1:8000/api/categories/list")
+                        .then(response => response.json())
+                        .then(data => {
+                            // console.log("Categorias carregadas:", data);
+
+                            if (!data || data.length === 0) {
+                                console.warn("Nenhuma categoria encontrada!");
+                                return;
+                            }
+
+                            // 🔹 Remove todas as opções anteriores
+                            categoriaSelect.empty();
+
+                            // 🔹 Adiciona as categorias ao Select2
+                            data.forEach(cat => {
+                                let option = new Option(cat.name, cat.id, false, false);
+                                categoriaSelect.append(option);
+                            });
+
+                            // 🔹 Atualiza o Select2 para exibir todas as categorias carregadas
+                            categoriaSelect.trigger("change");
+                        })
+                        .catch(error => console.error("Erro ao carregar categorias:", error));
+                });
+
+
+
+
+
+
+
+
+
+                let produtoList = []
+                // Função para abrir o modal de edição (exemplo)
+                function openModalEdit(produtoId) {
+                    // console.log("Abrindo modal para o produto ID:", produtoId);
+
+                    let produto = produtoList.find(p => p.id === produtoId);
+                    if (!produto) {
+                        alert("Erro: Produto não encontrado!");
+                        return;
+                    }
+
+                    // Preenche os campos do modal
+                    document.getElementById('modalNome').value = produto.nome || '';
+                    document.getElementById('modalValor').value = produto.valor_unitario || '';
+                    document.getElementById('modalDescricao').value = produto.descricao || '';
+                    document.getElementById('modalImagem').value = produto.imagem || '';
+                    document.getElementById('modalProdutoId').value = produto.id;
+
+                    // Preencher estoque (se disponível)
+                    document.getElementById('modalEstoque').value =
+                        (produto.estoque && produto.estoque.length > 0) ? produto.estoque[0].quantidade : '';
+
+                    let categoriaSelect = $("#modalCategoria");
+                    categoriaSelect.val([]).trigger("change"); // Limpa seleções anteriores
+
+                    if (produto.categoria && produto.categoria.length > 0) {
+                        let categoriasSelecionadas = produto.categoria.map(cat => cat.id);
+                        categoriaSelect.val(categoriasSelecionadas).trigger("change"); // Marca categorias existentes
+                    }
+
+                    // Exibe o modal
+                    let modal = new bootstrap.Modal(document.getElementById('modalEditarProduto'));
+                    modal.show();
+                }
+
+
+
+
+
+                window.openModalEdit = openModalEdit;
+                // Função para excluir um produto (exemplo)
+                function excluirProduto(produtoId) {
+                    if (confirm(`Tem certeza que deseja excluir o produto ID: ${produtoId}?`)) {
+                        fetch(`http://127.0.0.1:8000/api/produtos/${produtoId}`, {
+                            method: 'DELETE',
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Erro ao excluir o produto');
+                                }
+                                alert("Produto excluído com sucesso!");
+                                buscarProdutos(selectLojas.value); // Atualiza a lista de produtos
+                            })
+                            .catch(error => {
+                                console.error("Erro ao excluir produto:", error);
+                                alert("Erro ao excluir produto.");
+                            });
+                    }
+                }
+
+                function salvarEdicaoProduto() {
+                    let produtoId = document.getElementById('modalProdutoId').value;
+                    let nome = document.getElementById('modalNome').value;
+                    let valor_unitario = document.getElementById('modalValor').value;
+                    let descricao = document.getElementById('modalDescricao').value;
+                    let imagem = document.getElementById('modalImagem').value;
+                    let estoque = document.getElementById('modalEstoque').value;
+
+                    // Obtém os IDs das categorias selecionadas no Select2
+                    let categoriaIds = $("#modalCategoria").val();
+
+                    let produtoEditado = {
+                        nome: nome,
+                        valor_unitario: parseFloat(valor_unitario),
+                        descricao: descricao,
+                        imagem: imagem,
+                        ativo: 1,
+                        categoria_ids: categoriaIds,
+                        estoque: parseInt(estoque)
+                    };
+
+                    fetch(`http://127.0.0.1:8000/api/produtos/update/${produtoId}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(produtoEditado)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Produto atualizado:", data);
+
+                            // ✅ Exibir mensagem de sucesso (Toast) por mais tempo
+                            let toastElement = document.getElementById("toastSuccess");
+                            let toast = new bootstrap.Toast(toastElement, { delay: 3000 }); // Mostra por 3 segundos
+                            toast.show();
+
+                            // ✅ Fechar o modal após a exibição do toast
+                            setTimeout(() => {
+                                let modalEditar = new bootstrap.Modal(document.getElementById('modalEditarProduto'));
+                                modalEditar.hide();
+                            }, 2000); // Aguarda 2 segundos antes de fechar
+
+                            // ✅ Atualizar listagem da loja sem recarregar a página
+                            let lojaSelecionada = document.getElementById("store-select").value;
+                            if (lojaSelecionada) {
+                                buscarProdutoss(lojaSelecionada);
+                            }
+                        })
+                        .catch(error => console.error("Erro ao editar produto:", error));
+                }
+                function closeModal() {
+                    $('#modalEditarProduto').modal('hide');
+                }
+
+            </script>
+
+            </table>
+        </div>
+        <script src="sidebar.js"></script>
+
+        <script>
+            document.getElementById("store-select").addEventListener("change", function () {
+                let productSection = document.getElementById("product-section");
+                if (this.value) {
+                    productSection.classList.remove("hidden");
+                } else {
+                    productSection.classList.add("hidden");
+                }
+            });
         </script>
-      
-        </table>
-    </div>
-    <script>
-        function openModal() {
-            document.getElementById("modal").style.display = "flex";
-        }
-
-        function closeModal() {
-            document.getElementById("modal").style.display = "none";
-        }
-
-        window.onclick = function (event) {
-            let modal = document.getElementById("modal");
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
-    </script>
-    <script>
-        function openModalEdit() {
-            document.getElementById("modalEdit").style.display = "flex";
-        }
-
-        function closeModalEdit() {
-            document.getElementById("modalEdit").style.display = "none";
-        }
-        window.onclick = function (event) {
-            let modal_edit = document.getElementById("modalEdit");
-            if (event.target === modaedit) {
-                closeModalEdit();
-            }
-        }
-    </script>
-
-
-
-    <script src="sidebar.js"></script>
-
-    <script>
-        document.getElementById("store-select").addEventListener("change", function () {
-            let productSection = document.getElementById("product-section");
-            if (this.value) {
-                productSection.classList.remove("hidden");
-            } else {
-                productSection.classList.add("hidden");
-            }
-        });
-    </script>
 
 
 </body>
