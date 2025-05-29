@@ -45,14 +45,17 @@ document.addEventListener("DOMContentLoaded", function () {
         api.get(endpoint)
             .then(data => {
                 console.log("Dados recebidos da API:", data);
+                
                 data.forEach(loja => {
-                    const logoUrl = loja.logo 
-                        ? `http://127.0.0.1:8000/storage/${loja.logo}` 
-                        : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABYSURBVFhH7daxDYAwDAPB/P9fOwgWOpBSCG6tB0FrgA8pGEEQhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhP4MC1iUwp3jAAAAAElFTkSuQmCC';
+                    
+                    // const logoUrl = loja.logo 
+                    //     ? `http://127.0.0.1:8000/storage/${loja.logo}` 
+                    //     : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABYSURBVFhH7daxDYAwDAPB/P9fOwgWOpBSCG6tB0FrgA8pGEEQhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhEIhhP4MC1iUwp3jAAAAAElFTkSuQmCC';
                     
                     const row = document.createElement("tr");
+                    console.log(loja);
                     row.innerHTML = `
-                        <td><img src="${logoUrl}" alt="Logo" width="50"></td>
+                        <td><img src="${loja.logo}" alt="" width="50"></td>
                         <td>${loja.nome_fantasia}</td>
                         <td>${loja.cnpj || "N/A"}</td>
                         <td>${loja.email}</td>

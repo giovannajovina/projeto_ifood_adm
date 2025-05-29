@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevFood</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <!-- Bootstrap Links -->
+
+    <link rel="stylesheet" href="../css/configProdutosAba.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+    <!--    &lt;!&ndash; for handle Bar &ndash;&gt;-->
+    <script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
+
+    <!--Semantics Ui CDN  -->
+    <!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">-->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>-->
+
+    <!-- select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div id="sidebar-container"></div>
+    <div class="main-content">
+        <header>
+            <h3>Relatório de Faturamento Diário por Loja</h3>
+        </header>
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label>Data Inicial</label>
+                <input type="date" id="filtroDataInicio" class="form-control">
+            </div>
+            <div class="col-md-3">
+                <label>Data Final</label>
+                <input type="date" id="filtroDataFim" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label>Loja</label>
+                <select id="filtroLoja" class="form-control">
+                    <option value="">Todas</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-primary w-100" onclick="filtrarRelatorio()">Filtrar</button>
+            </div>
+        </div>
+      
+        <button class="btn btn-success" onclick="exportarExcel()">Exportar para Excel</button>
+
+
+
+
+        <div class="container mt-5">
+            <h2>Relatório de Pedidos</h2>
+            <table class="table table-bordered" id="tabelaFaturamento">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Loja</th>
+                        <th>Faturamento (R$)</th>
+
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+
+
+
+        <script src="sidebar.js"></script>
+
+        <script>
+            function filtrarRelatorio() {
+                let dadosRelatorio = [];
+                const lojaId = document.getElementById('filtroLoja').value;
+                const inicio = document.getElementById('filtroDataInicio').value;
+                const fim = document.getElementById('filtroDataFim').value;
+
+                const filtrado = dadosRelatorio.filter(item => {
+                    const dataPedido = new Date(item.data);
+                    const dentroPeriodo =
+                        (!inicio || new Date(inicio) <= dataPedido) &&
+                        (!fim || dataPedido <= new Date(fim + 'T23:59:59'));
+                    const mesmaLoja = !lojaId || item.loja_id == lojaId;
+                    return dentroPeriodo && mesmaLoja;
+                });
+
+                renderizarTabela(filtrado);
+            }
+            document.addEventListener('DOMContentLoaded', function () {
+                let dadosRelatorio = [];
+
+                async function carregarLojas() {
+                    const resposta = await fetch('http://127.0.0.1:8000/api/lojas/list');
+                    const lojas = await resposta.json();
+                    const select = document.getElementById('filtroLoja');
+
+                    lojas.forEach(loja => {
+                        const option = document.createElement('option');
+                        option.value = loja.id;
+                        option.textContent = loja.nome_fantasia;
+                        select.appendChild(option);
+                    });
+                }
+
+                async function carregarRelatorio() {
+                    const resposta = await fetch('http://127.0.0.1:8000/api/lojas/relatorio-fat-diario');
+                    dadosRelatorio = await resposta.json();
+                    renderizarTabela(dadosRelatorio);
+                }
+
+                function renderizarTabela(dados) {
+                    const tbody = document.querySelector('#tabelaFaturamento tbody');
+                    tbody.innerHTML = '';
+
+                    dados.forEach(linha => {
+                        const tr = document.createElement('tr');
+                        const dataFormatada = new Date(linha.data).toLocaleDateString('pt-BR');
+                        const valor = parseFloat(linha.faturamento).toFixed(2).replace('.', ',');
+
+                        tr.innerHTML = `<td>${dataFormatada}</td><td>${linha.loja}</td><td>R$ ${valor}</td>`;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+
+                function exportarExcel() {
+                    const tabela = document.querySelector('#tabelaFaturamento');
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.table_to_sheet(tabela);
+                    XLSX.utils.book_append_sheet(wb, ws, "Faturamento Diário");
+                    XLSX.writeFile(wb, "faturamento_diario.xlsx");
+                }
+
+                carregarLojas();
+                carregarRelatorio();
+                window.filtrarRelatorio = function () {
+                    const lojaId = document.getElementById('filtroLoja').value;
+                    const inicio = document.getElementById('filtroDataInicio').value;
+                    const fim = document.getElementById('filtroDataFim').value;
+
+                    const filtrado = dadosRelatorio.filter(item => {
+                        const dataPedido = new Date(item.data);
+                        const dentroPeriodo =
+                            (!inicio || new Date(inicio) <= dataPedido) &&
+                            (!fim || dataPedido <= new Date(fim + 'T23:59:59'));
+                        const mesmaLoja = !lojaId || item.loja_id == lojaId;
+                        return dentroPeriodo && mesmaLoja;
+                    });
+
+                    renderizarTabela(filtrado);
+
+                }
+            });
+            function exportarExcel() {
+                const tabela = document.getElementById("tabelaFaturamento");
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.table_to_sheet(tabela);
+                XLSX.utils.book_append_sheet(wb, ws, "Relatório");
+                XLSX.writeFile(wb, "relatorio_faturamento.xlsx");
+            }
+
+
+        </script>
+
+
+
+</body>
+
+</html>

@@ -6,9 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
             <ul>
                 <li><a href="#">Categorias</a></li>
                 <li><a href="#">Banners</a></li>
-                <li><a href="#">Pedidos <span class="notification">1</span></a></li>
+                <li><a href="pedido.html">Pedidos <span class="notification">1</span></a></li>
                 <li class="active"><a href="index.html">Lojas</a></li>
                 <li><a href="configProdutosAba.html">Produtos</a></li>
+                <li><a href="faturamento.html">Faturamento</a></li>
                 <li><a href="#">Usuarios <span class="new-badge">NOVO</span></a></li>
             </ul>
         </div>
