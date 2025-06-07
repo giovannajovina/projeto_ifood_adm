@@ -117,7 +117,7 @@
                 let dadosRelatorio = [];
 
                 async function carregarLojas() {
-                    const resposta = await fetch('http://127.0.0.1:8000/api/lojas/list');
+                    const resposta = await fetch('https://clickfood.shop/api/lojas/list');
                     const lojas = await resposta.json();
                     const select = document.getElementById('filtroLoja');
 
@@ -130,7 +130,7 @@
                 }
 
                 async function carregarRelatorio() {
-                    const resposta = await fetch('http://127.0.0.1:8000/api/lojas/relatorio-fat-diario');
+                    const resposta = await fetch('https://clickfood.shop/api/lojas/relatorio-fat-diario');
                     dadosRelatorio = await resposta.json();
                     renderizarTabela(dadosRelatorio);
                 }

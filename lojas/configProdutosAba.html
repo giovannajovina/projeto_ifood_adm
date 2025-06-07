@@ -7,7 +7,7 @@
     <title>DevFood</title>
     <!-- <link rel="stylesheet" href="styles.css"> -->
     <!-- Bootstrap Links -->
-    
+
     <link rel="stylesheet" href="../css/configProdutosAba.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
@@ -38,7 +38,7 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
     <style>
-        
+
     </style>
 </head>
 
@@ -62,20 +62,20 @@
                 <div class="active">Produtos</div>
             </div>
             <div class="search-bar">
-                <button class="button-open-modal" onclick="openModal()">Cadastrar Produto</button>
+                <button class="button-open-modal" id="openModal" onclick="abrirModal()">Cadastrar Produto</button>
                 <input type="text" placeholder="Buscar por um produto">
             </div>
-            <div id="modalProdutoNovo" class="modal">
+            <div id="modalProdutoNovo" class="modal hidden">
                 <div class="modal-content">
                     <h2>Cadastrar Novo Produto</h2>
-                    <form>
+                    <form id="formCadastro">
                         <label for="imagem">Imagem:</label>
                         <input type="text" id="imagemUrl" name="imagemUrl" placeholder="Imagem do produto" required>
 
                         <label for="nome">Nome:</label>
                         <input type="text" id="nome" name="nome" placeholder="Nome do produto" required>
                         <label for="categoria">Categoria:</label>
-                        <!-- <select id="modalCategoria" class="form-control select2" multiple></select> -->
+                        <select id="modalCategoria" class="form-control select2" multiple></select>
 
                         <label for="valor">Valor:</label>
                         <input type="number" id="valor" name="valor" placeholder="Valor" step="0.01" required>
@@ -85,11 +85,55 @@
 
                         <div class="modal-buttons">
                             <button type="submit" class="submit-button">Enviar</button>
-                            <button type="button" class="cancel-button">Cancelar</button>
+                            <button type="button" class="cancel-button" onclick="cancelModal()">Cancelar</button>
                         </div>
                     </form>
                 </div>
             </div>
+            <script>
+                const formCadastro = document.getElementById("formCadastro");
+                formCadastro.addEventListener("submit", async function (event) {
+                    event.preventDefault();
+
+                    const imagemUrl = document.getElementById("imagemUrl").value.trim().toUpperCase();
+                    const nome = document.getElementById("nome").value.trim();
+                    const modalCategoria = document.getElementById("modalCategoria").value.replace(/\D/g, "");
+                    const valor = document.getElementById("valor").value.trim();
+                    const estoque = document.getElementById("estoque").value || "Sem estoque";
+                    const lojaId = localStorage.getItem("loja_id");
+
+
+                    const formData = new FormData();
+                    
+                    formData.append("loja_id", lojaId)
+                    formData.append("valor_unitario", valor);
+                    formData.append("nome", nome);
+                    formData.append("modalCategoria", modalCategoria);
+                    if (imagemUrl) formData.append("imagemUrl", imagemUrl);
+                    formData.append("estoque", estoque);
+                    fetch('https://clickfood.shop/api/usuario/save', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                });
+
+
+
+
+                function abrirModal() {
+                    const modal = document.getElementById("modalProdutoNovo");
+                    modal.style.display = "flex";
+                    console.log("✅ Modal aberto");
+                }
+                function cancelModal() {
+                    const modal = document.getElementById("modalProdutoNovo");
+                    modal.style.display = "none";
+                    console.log("✅ Modal fechado");
+                }
+            </script>
 
             <table class="table table-bordered table-striped">
                 <tr>
@@ -184,7 +228,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-danger" onclick="salvarEdicaoProduto()">Enviar</button>
-                            <button type="button"  class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+                            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -197,7 +241,7 @@
                     const selectLojas = document.getElementById('store-select');
 
                     // Fazendo a requisição para a API de lojas
-                    fetch("http://127.0.0.1:8000/api/lojas/list")
+                    fetch("https://clickfood.shop/api/lojas/list")
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error(`Erro ao buscar lojas: ${response.status}`);
@@ -224,7 +268,7 @@
                     // Evento para capturar a loja selecionada e buscar produtos
                     selectLojas.addEventListener("change", function () {
                         const lojaId = this.value;
-
+                        localStorage.setItem("loda_id", lojaId);
                         if (lojaId) {
                             buscarProdutos(lojaId);
                         } else {
@@ -233,8 +277,8 @@
                     });
 
                     // Função para buscar produtos da loja selecionada
-                   window.buscarProdutos = function (lojaId) {
-                        fetch(`http://127.0.0.1:8000/api/lojas/${lojaId}/produtos`)
+                    window.buscarProdutos = function (lojaId) {
+                        fetch(`https://clickfood.shop/api/lojas/${lojaId}/produtos`)
                             .then(response => response.json())
                             .then(produtos => {
                                 tabelaProdutos.innerHTML = ""; // Limpa a tabela anterior
@@ -307,7 +351,7 @@
                 })
                 // Função para buscar produtos da loja selecionada
                 function buscarProdutoss(lojaId) {
-                    fetch(`http://127.0.0.1:8000/api/lojas/${lojaId}/produtos`)
+                    fetch(`https://clickfood.shop/api/lojas/${lojaId}/produtos`)
                         .then(response => response.json())
                         .then(produtos => {
                             tabelaProdutos.innerHTML = ""; // Limpa a tabela anterior
@@ -384,7 +428,7 @@
                     });
 
                     // 🔹 Busca as categorias do banco de dados e adiciona ao Select2
-                    fetch("http://127.0.0.1:8000/api/categories/list")
+                    fetch("https://clickfood.shop/api/categories/list")
                         .then(response => response.json())
                         .then(data => {
                             // console.log("Categorias carregadas:", data);
@@ -460,7 +504,7 @@
                 // Função para excluir um produto (exemplo)
                 function excluirProduto(produtoId) {
                     if (confirm(`Tem certeza que deseja excluir o produto ID: ${produtoId}?`)) {
-                        fetch(`http://127.0.0.1:8000/api/produtos/${produtoId}`, {
+                        fetch(`https://clickfood.shop/api/produtos/${produtoId}`, {
                             method: 'DELETE',
                         })
                             .then(response => {
@@ -498,7 +542,7 @@
                         estoque: parseInt(estoque)
                     };
 
-                    fetch(`http://127.0.0.1:8000/api/produtos/update/${produtoId}`, {
+                    fetch(`https://clickfood.shop/api/produtos/update/${produtoId}`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json",

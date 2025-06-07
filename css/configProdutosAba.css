@@ -18,6 +18,9 @@ body {
     overflow-y: auto;
     /* Caso tenha muitas opções no menu */
 }
+.hidden {
+  display: none;
+}
 
 
 .sidebar h2 {
@@ -201,6 +204,7 @@ th {
     width: 500px;
     max-width: 90%;
     text-align: center;
+    width: 43% !important;
 }
 
 .modal-content h2 {
@@ -391,4 +395,8 @@ table img {
 
 .select2-container {
     display: inline !important;
+}
+.select2-container--default .select2-selection--multiple {
+
+    width: 400px;
 }
